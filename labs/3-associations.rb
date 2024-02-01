@@ -17,13 +17,63 @@ Activity.destroy_all
 # 1. insert 3 rows in the activities table with relationships to
 # a single salesperson and 2 different contacts
 
+puts "Activities: #{Activity.all.count}"
+
+# query to find a salesperson row in the salespeople table
+# find salesperson
+ben = Salesperson.find_by({"first_name" => "Ben", "last_name" => "Block"})
+
+# query to find a contact row in the contacts table
+# find contact
+cook = Contact.find_by({"first_name" => "Tim", "last_name" => "Cook"})
+craig = Contact.find_by({"first_name" => "Craig", "last_name" => "Fredrick"})
+
+# Activity.new
+activity = Activity.new
+# assign new activity salesperson_id to salesperson
+activity["salesperson_id"] = ben["id"]
+# assign new activity contact_id to contact
+activity["contact_id"] = cook["id"]
+# assign the activity notes
+activity["notes"] = "quick check-in over facetime"
+# save new activity
+activity.save
+
+activity = Activity.new
+activity["salesperson_id"] = ben["id"]
+activity["contact_id"] = cook["id"]
+activity["notes"] = "met at Cupertino"
+activity.save
+
+# query to find a contact row in the contacts table
+bezos = Contact.find_by({"first_name" => "Jeff", "last_name" => "Bezos"})
+
+activity = Activity.new
+activity["salesperson_id"] = ben["id"]
+activity["contact_id"] = bezos["id"]
+activity["notes"] = "met at Blue Origin HQ"
+activity.save
+
+puts "Activities: #{Activity.all.count}"
+
 # 2. Display all the activities between the salesperson used above
 # and one of the contacts (sample output below):
 
 # ---------------------------------
-# Activities between Ben and Tim Cook:
+puts "Activities between Ben and Tim Cook:"
 # - quick checkin over facetime
 # - met at Cupertino
+
+# query to find activity rows associated to salesperson Ben and contact Tim Cook
+activities = Activity.where({"salesperson_id" => ben["id"], "contact_id" => cook["id"]})
+
+for activity in activities
+    # read the note column from the row
+    note = activity["notes"]
+    # display a string with the note
+    puts "- #{note}"
+end
+
 
 # CHALLENGE:
 # 3. Similar to above, but display all of the activities for the salesperson
